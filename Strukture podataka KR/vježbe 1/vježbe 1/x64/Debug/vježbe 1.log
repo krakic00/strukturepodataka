@@ -1,0 +1,4 @@
+﻿  vježbe 1.cpp
+D:\Strukture podataka KR\vježbe 1\vježbe 1\vježbe 1.cpp(65,32): warning C4566: character represented by universal-character-name '\u0107' cannot be represented in the current code page (1252)
+D:\Strukture podataka KR\vježbe 1\vježbe 1\vježbe 1.cpp(87,32): warning C4566: character represented by universal-character-name '\u010D' cannot be represented in the current code page (1252)
+  vježbe 1.vcxproj -> D:\Strukture podataka KR\vježbe 1\x64\Debug\vježbe 1.exe
