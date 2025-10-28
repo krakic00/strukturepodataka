@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad3\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{61A991D4-7A50-4E36-9CC9-5098D37DD263}|zad3\\zad3.vcxproj|C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad3\\zad3\\Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{61A991D4-7A50-4E36-9CC9-5098D37DD263}|zad3\\zad3.vcxproj|solutionrelative:zad3\\Source.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Source.c",
+              "DocumentMoniker": "C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad3\\zad3\\Source.c",
+              "RelativeDocumentMoniker": "zad3\\Source.c",
+              "ToolTip": "C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad3\\zad3\\Source.c",
+              "RelativeToolTip": "zad3\\Source.c",
+              "ViewState": "AgIAAEcAAAAAAAAAAAAAAEcAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-10-28T10:03:25.397Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
