@@ -1,133 +1,167 @@
-﻿#include <stdio.h>
-#include <stdlib.h>
+﻿#include <stdio.h>    // za ulaz/izlaz
+#include <stdlib.h>   // za malloc, free, exit itd.
 
-#define MAX 100  // maksimalan broj članova u polinomu
-
-// struktura koja opisuje jedan član polinoma
-typedef struct {
-    int koef;  // koeficijent člana
-    int exp;   // eksponent člana
+// struktura koja predstavlja jedan član polinoma (čvor liste)
+typedef struct Clan {
+    int koef;              // koeficijent
+    int exp;               // eksponent
+    struct Clan* next;     // pokazivač na sljedeći čvor
 } Clan;
 
-// funkcija za čitanje polinoma iz datoteke
-int ucitajPolinom(FILE* fp, Clan polinom[]) {
-    int n = 0;  // broj učitanih članova
-    while (fscanf(fp, "%d %d", &polinom[n].koef, &polinom[n].exp) == 2) {
-        n++;  // povećavamo broj članova
-        // prekid ako dođemo do kraja reda
-        if (fgetc(fp) == '\n' || feof(fp)) break;
+// funkcija za stvaranje novog čvora
+Clan* noviClan(int koef, int exp) {
+    Clan* novi = (Clan*)malloc(sizeof(Clan)); // alociramo memoriju
+    novi->koef = koef;                        // postavljamo koeficijent
+    novi->exp = exp;                          // postavljamo eksponent
+    novi->next = NULL;                        // inicijalno nema sljedećeg
+    return novi;                              // vraćamo pokazivač na novi čvor
+}
+
+// funkcija za dodavanje člana u polinom na kraj liste
+void dodajNaKraj(Clan** glava, int koef, int exp) {
+    Clan* novi = noviClan(koef, exp);         // stvori novi čvor
+    if (*glava == NULL) {                     // ako je lista prazna
+        *glava = novi;                        // novi postaje glava
+        return;
     }
-    return n;  // vraćamo koliko smo članova učitali
+    Clan* temp = *glava;                      // inače idemo do kraja liste
+    while (temp->next) temp = temp->next;
+    temp->next = novi;                        // dodaj novi čvor na kraj
 }
 
 // funkcija za ispis polinoma
-void ispisiPolinom(Clan p[], int n) {
-    for (int i = 0; i < n; i++) {
-        if (p[i].koef == 0) continue; // preskačemo nule
-        if (i > 0 && p[i].koef > 0) printf("+"); // znak plus ako treba
-        printf("%dx^%d", p[i].koef, p[i].exp); // ispis jednog člana
+void ispisiPolinom(Clan* p) {
+    while (p) {                               // prolazimo kroz sve čvorove
+        if (p->koef == 0) { p = p->next; continue; } // preskačemo nule
+        if (p != NULL && p != p->next && p->next && p->next->koef > 0)
+            printf("%dx^%d+", p->koef, p->exp);
+        else
+            printf("%dx^%d", p->koef, p->exp);
+        if (p->next && p->next->koef < 0) printf(""); // minus se ispisuje automatski
+        p = p->next;
     }
     printf("\n");
 }
 
-// funkcija za sortiranje članova prema eksponentima (silazno)
-void sortiraj(Clan p[], int n) {
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (p[i].exp < p[j].exp) { // ako je eksponent manji, zamijeni
-                Clan temp = p[i];
-                p[i] = p[j];
-                p[j] = temp;
-            }
-        }
+// funkcija za umetanje člana u polinom (sortirano po eksponentima silazno)
+void umetniSortirano(Clan** glava, int koef, int exp) {
+    Clan* novi = noviClan(koef, exp);
+    // ako je lista prazna ili novi ima veći eksponent od prvog
+    if (*glava == NULL || (*glava)->exp < exp) {
+        novi->next = *glava;
+        *glava = novi;
+        return;
     }
+    Clan* temp = *glava;
+    // tražimo mjesto za umetanje (po silaznom redoslijedu)
+    while (temp->next && temp->next->exp > exp) temp = temp->next;
+
+    // ako postoji isti eksponent, samo zbrojimo koeficijente
+    if (temp->next && temp->next->exp == exp) {
+        temp->next->koef += koef;
+        free(novi); // novi nije potreban
+        return;
+    }
+
+    // umetanje između čvorova
+    novi->next = temp->next;
+    temp->next = novi;
+}
+
+// funkcija za čitanje jednog polinoma iz datoteke
+Clan* ucitajPolinom(FILE* fp) {
+    Clan* glava = NULL;
+    int koef, exp;
+    // čitamo parove (koef, exp) do kraja retka
+    while (fscanf(fp, "%d %d", &koef, &exp) == 2) {
+        umetniSortirano(&glava, koef, exp);
+        int c = fgetc(fp);
+        if (c == '\n' || c == EOF) break; // kraj retka
+    }
+    return glava;
 }
 
 // funkcija za zbrajanje dvaju polinoma
-int zbroji(Clan p1[], int n1, Clan p2[], int n2, Clan rez[]) {
-    int i = 0, j = 0, k = 0;
-    while (i < n1 && j < n2) {
-        if (p1[i].exp == p2[j].exp) { // isti eksponent – zbroji koeficijente
-            rez[k].exp = p1[i].exp;
-            rez[k].koef = p1[i].koef + p2[j].koef;
-            i++; j++; k++;
+Clan* zbroji(Clan* p1, Clan* p2) {
+    Clan* rezultat = NULL;
+    while (p1 && p2) {
+        if (p1->exp == p2->exp) {                       // isti eksponent
+            int noviKoef = p1->koef + p2->koef;
+            if (noviKoef != 0)
+                umetniSortirano(&rezultat, noviKoef, p1->exp);
+            p1 = p1->next;
+            p2 = p2->next;
         }
-        else if (p1[i].exp > p2[j].exp) { // veći eksponent ide prvi
-            rez[k++] = p1[i++];
+        else if (p1->exp > p2->exp) {                   // veći eksponent
+            umetniSortirano(&rezultat, p1->koef, p1->exp);
+            p1 = p1->next;
         }
         else {
-            rez[k++] = p2[j++];
+            umetniSortirano(&rezultat, p2->koef, p2->exp);
+            p2 = p2->next;
         }
     }
-    // preostali članovi ako ih ima
-    while (i < n1) rez[k++] = p1[i++];
-    while (j < n2) rez[k++] = p2[j++];
-    return k; // vraćamo broj članova rezultata
+    // dodaj preostale članove
+    while (p1) { umetniSortirano(&rezultat, p1->koef, p1->exp); p1 = p1->next; }
+    while (p2) { umetniSortirano(&rezultat, p2->koef, p2->exp); p2 = p2->next; }
+    return rezultat;
 }
 
 // funkcija za množenje dvaju polinoma
-int pomnozi(Clan p1[], int n1, Clan p2[], int n2, Clan rez[]) {
-    int k = 0;
-    // inicijalno postavimo sve na 0
-    for (int i = 0; i < MAX; i++) {
-        rez[i].koef = 0;
-        rez[i].exp = 0;
-    }
-    // množimo svaki član prvog sa svakim članom drugog
-    for (int i = 0; i < n1; i++) {
-        for (int j = 0; j < n2; j++) {
-            int noviExp = p1[i].exp + p2[j].exp; // zbrajamo eksponente
-            int noviKoef = p1[i].koef * p2[j].koef; // množimo koeficijente
-            // tražimo postoji li već taj eksponent u rezultatu
-            int postoji = 0;
-            for (int t = 0; t < k; t++) {
-                if (rez[t].exp == noviExp) {
-                    rez[t].koef += noviKoef; // zbrojimo koeficijente
-                    postoji = 1;
-                    break;
-                }
-            }
-            if (!postoji) { // ako ne postoji, dodamo novi član
-                rez[k].exp = noviExp;
-                rez[k].koef = noviKoef;
-                k++;
-            }
+Clan* pomnozi(Clan* p1, Clan* p2) {
+    Clan* rezultat = NULL;
+    for (Clan* i = p1; i != NULL; i = i->next) {
+        for (Clan* j = p2; j != NULL; j = j->next) {
+            int noviKoef = i->koef * j->koef;          // množimo koeficijente
+            int noviExp = i->exp + j->exp;             // zbrajamo eksponente
+            umetniSortirano(&rezultat, noviKoef, noviExp); // dodaj u rezultat
         }
     }
-    sortiraj(rez, k); // sortiramo rezultat po eksponentima
-    return k;
+    return rezultat;
+}
+
+// funkcija za oslobađanje memorije
+void oslobodi(Clan* p) {
+    while (p) {
+        Clan* temp = p;
+        p = p->next;
+        free(temp);
+    }
 }
 
 int main() {
-    FILE* fp = fopen("polinomi.txt", "r"); // otvaramo datoteku
+    FILE* fp = fopen("polinomi.txt", "r");      // otvaramo datoteku
     if (!fp) {
         printf("Greška pri otvaranju datoteke!\n");
         return 1;
     }
 
-    Clan p1[MAX], p2[MAX], zbroj[MAX], umnozak[MAX];
-    int n1, n2, nz, nm;
-
-    n1 = ucitajPolinom(fp, p1);  // čitamo prvi polinom
-    n2 = ucitajPolinom(fp, p2);  // čitamo drugi polinom
-    fclose(fp); // zatvaramo datoteku
-
-    sortiraj(p1, n1); // sortiramo prvi polinom
-    sortiraj(p2, n2); // sortiramo drugi polinom
+    // čitanje dva polinoma
+    Clan* p1 = ucitajPolinom(fp);
+    Clan* p2 = ucitajPolinom(fp);
+    fclose(fp);
 
     printf("Prvi polinom: ");
-    ispisiPolinom(p1, n1);
-    printf("Drugi polinom: ");
-    ispisiPolinom(p2, n2);
+    ispisiPolinom(p1);
 
-    nz = zbroji(p1, n1, p2, n2, zbroj);  // zbrajamo
-    nm = pomnozi(p1, n1, p2, n2, umnozak); // množimo
+    printf("Drugi polinom: ");
+    ispisiPolinom(p2);
+
+    // računanje zbroja i umnoška
+    Clan* zbrojPol = zbroji(p1, p2);
+    Clan* umnozakPol = pomnozi(p1, p2);
 
     printf("\nZbroj: ");
-    ispisiPolinom(zbroj, nz);
+    ispisiPolinom(zbrojPol);
 
     printf("Umnožak: ");
-    ispisiPolinom(umnozak, nm);
+    ispisiPolinom(umnozakPol);
+
+    // oslobađanje memorije
+    oslobodi(p1);
+    oslobodi(p2);
+    oslobodi(zbrojPol);
+    oslobodi(umnozakPol);
 
     return 0;
 }
