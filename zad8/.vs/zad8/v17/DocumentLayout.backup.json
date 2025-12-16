@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad8\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{23C51754-4839-4CD2-BB24-DD392A7C82D3}|zad8\\zad8.vcxproj|C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad8\\zad8\\zad8.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{23C51754-4839-4CD2-BB24-DD392A7C82D3}|zad8\\zad8.vcxproj|solutionrelative:zad8\\zad8.c||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "zad8.c",
+              "DocumentMoniker": "C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad8\\zad8\\zad8.c",
+              "RelativeDocumentMoniker": "zad8\\zad8.c",
+              "ToolTip": "C:\\Users\\Korisnik\\Desktop\\strukturepodataka\\zad8\\zad8\\zad8.c",
+              "RelativeToolTip": "zad8\\zad8.c",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000423|",
+              "WhenOpened": "2025-12-16T17:03:14.07Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
