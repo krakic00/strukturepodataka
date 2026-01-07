@@ -1,0 +1,2 @@
+﻿  zad4.c
+C:\Users\Korisnik\Desktop\strukturepodataka\zad4\zad4\zad4.c(15,12): error C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
