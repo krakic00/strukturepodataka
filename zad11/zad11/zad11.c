@@ -1,9 +1,9 @@
-﻿#define _CRT_SECURE_NO_WARNINGS          // onemogućuje warninge za scanf/fscanf u MSVC-u
-#include <stdio.h>                      // standardni ulaz/izlaz
-#include <stdlib.h>                     // malloc, free
-#include <string.h>                     // strcpy, strcmp
+﻿#define _CRT_SECURE_NO_WARNINGS          
+#include <stdio.h>                      
+#include <stdlib.h>                     
+#include <string.h>                    
 
-#define HASH_SIZE 11                    // veličina hash tablice
+#define HASH_SIZE 11                    
 
 // struktura za grad (čvor BST-a)
 typedef struct Grad {
